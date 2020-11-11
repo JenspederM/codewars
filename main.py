@@ -1,4 +1,4 @@
-from GameOfLife import get_generation, start
+from PyramidSlideDown import pyramid_test, longest_slide_down
 
 if __name__ == '__main__':
-    print(get_generation(start, 5))
+    print(longest_slide_down(pyramid_test))
