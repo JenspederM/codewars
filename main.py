@@ -1,4 +1,4 @@
-from PyramidSlideDown import pyramid_test, longest_slide_down
+from BattleshipFieldValidator import validate_battlefield, battlefield_test
 
 if __name__ == '__main__':
-    print(longest_slide_down(pyramid_test))
+    print(validate_battlefield(battlefield_test))
