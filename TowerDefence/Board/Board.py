@@ -33,7 +33,7 @@ class Board:
                 new_field[i][j] = '-'
         for i, row in enumerate(new_field):
             new_field[i] = ''.join(row)
-
+        
         print('\n'.join(new_field))
 
     def find_start(self):

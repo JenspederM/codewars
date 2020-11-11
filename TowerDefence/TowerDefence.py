@@ -17,10 +17,9 @@ class TowerDefence:
                f'Monsters: {self.monsters.__repr__()}'
 
     def step(self, debug=True):
+        self.turrets.reset_turrets()
         if debug:
             print('-' * 50)
-        self.turrets.reset_turrets()
-
         if self.monsters.spawn_count < self.monsters.wave_length:
             self.monsters.move_monsters()
             self.monsters.spawn_monster()
@@ -45,6 +44,8 @@ class TowerDefence:
             print('')
 
         for _ in range(self.steps):
+            if _ == 23:
+                print('')
             if debug:
                 print(f'Step: {_}')
             self.step(debug=debug)

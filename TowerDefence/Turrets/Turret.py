@@ -6,7 +6,7 @@ class Turret:
         self.name = name
         self.position = position
         self.fire_rate = fire_rate
-        self.fire_range = fire_range
+        self.fire_range = fire_range ** 2
         self.positions_in_range = self.find_positions_in_range(path)
         self.ammo = 0
 
@@ -53,5 +53,4 @@ class Turret:
     def in_range2(self, position):
         i0, j0 = self.position
         i1, j1 = position
-        from math import sqrt
-        return sqrt((i1 - i0) ** 2 + (j1 - j0) ** 2) <= self.fire_range
+        return (i1 - i0) ** 2 + (j1 - j0) ** 2 <= self.fire_range

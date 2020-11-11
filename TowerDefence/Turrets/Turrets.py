@@ -4,19 +4,11 @@ from TowerDefence.Turrets.Turret import Turret
 
 class Turrets:
     def __init__(self, board, turrets):
-        self.max_fire_rate = 0
+        self.max_ammo = 0
         self.list = self.create_turrets(board, turrets)
 
     def __repr__(self):
         return f'Turrets({[t.name for t in self.list]})'
-
-    def find_monsters_in_range(self, monsters: Monsters):
-        for turret in self.list:
-            for monster in monsters.list:
-                if turret.in_range2(monster.position):
-                    turret.monsters_in_range.append(monster)
-            if turret.has_monsters_in_range():
-                turret.reload()
 
     def reset_turrets(self):
         for turret in self.list:
@@ -24,16 +16,28 @@ class Turrets:
 
     def fire_turrets(self, monsters: Monsters, debug=False):
         monster_list = monsters.list[monsters.done_count:monsters.spawn_count]
-        for _ in range(self.max_fire_rate):
+        for i in range(self.max_ammo):
             for turret in self.list:
+                if i == 0:
+                    turret.ammo = turret.fire_rate
                 if turret.ammo == 0:
                     continue
                 for monster in monster_list:
                     alive = monster.is_alive
-                    in_range = turret.in_range2(monster.position)
+                    in_range = monster.position in turret.positions_in_range
                     if alive and in_range:
                         turret.fire(monster, debug=debug)
                         break
+
+    def set_targets(self, monsters):
+        monster_list = monsters.list[monsters.done_count:monsters.spawn_count]
+        for turret in self.list:
+            push = turret.targets.append
+            for monster in monster_list:
+                alive = monster.is_alive
+                in_range = monster.position in turret.positions_in_range
+                if alive and in_range:
+                    push(monster)
 
     def create_turrets(self, board, turrets):
         output = []
@@ -43,8 +47,8 @@ class Turrets:
             position = board.turret_positions[name]
             output.append(
                 Turret(name, position, fire_rate, fire_range, board.path))
-            if fire_rate > self.max_fire_rate:
-                self.max_fire_rate = fire_rate
+            if fire_rate > self.max_ammo:
+                self.max_ammo = fire_rate
 
         sorted_output = sorted(output, key=lambda x: x.name)
 
