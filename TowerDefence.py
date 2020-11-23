@@ -14,10 +14,10 @@ def get_next_pos(last_pos, cur_pos, board, path_id='1'):
     i, j = cur_pos
 
     directions = {
-        'left':  [i, j - 1],
+        'left' : [i, j - 1],
         'right': [i, j + 1],
-        'up':    [i - 1, j],
-        'down':  [i + 1, j]
+        'up'   : [i - 1, j],
+        'down' : [i + 1, j]
     }
 
     for key, next_pos in directions.items():
@@ -59,11 +59,11 @@ def create_turret_data(board, turrets, path):
                     if dist <= fire_range:
                         positions_in_range.append(p)
                 data[key] = {
-                    'position':           position,
-                    'fire_range':         fire_range,
-                    'fire_rate':          fire_range,
+                    'position'          : position,
+                    'fire_range'        : fire_range,
+                    'fire_rate'         : fire_range,
                     'positions_in_range': positions_in_range,
-                    'bullets':            fire_rate
+                    'bullets'           : fire_rate
                 }
                 break
     return data
@@ -80,107 +80,65 @@ def calculate_euclidean_distance(from_pos, to_pos):
     return sqrt((to_pos[0] - from_pos[0]) ** 2 + (to_pos[1] - from_pos[1]) ** 2)
 
 
-def in_range(from_pos, to_pos, limit):
-    return calculate_euclidean_distance(from_pos, to_pos) <= limit
-
-
 def start_monster(monsters, path):
     for key, value in monsters.items():
         if value['position'] is None:
             monsters[key]['position'] = path[0]
             monsters[key]['path_idx'] = 0
-            break
 
 
-def move_monsters(monsters, path):
+def move_monsters(monsters, path, t):
+    assert t > 0, 'time must be a positive integer'
+    i = t - 1
+    remaining_health = 0
     for key, value in monsters.items():
-        if value['position'] is None:
+        if value['position'] == path[-1]:
+            remaining_health += value['health']
+        else:
+            if value['position'] is None:
+                break
+            monsters[key]['position'] = path[i]
+            monsters[key]['path_idx'] = i
+        i -= 1
+        if i < 0:
             break
-        monsters[key]['path_idx'] += 1
-        monsters[key]['position'] = path[value['path_idx'] - 1]
+    return remaining_health
 
 
 def remove_monsters(monsters, path):
     to_remove = []
-    remaining_health = 0
     for monster, data in monsters.items():
         if data['path_idx'] is None:
             break
-        if data['path_idx'] == len(path):
-            remaining_health += data['health']
-            to_remove.append(monster)
-        if data['health'] == 0:
+        if data['health'] == 0 or data['path_idx'] >= len(path):
             to_remove.append(monster)
 
     if len(to_remove) > 0:
         for monster in to_remove:
             del monsters[monster]
 
-    return remaining_health
-
-
-def turret_monster_pairs(turrets, monsters):
-    pairs = []
-    for t, td in turrets.items():
-        if td['bullets'] == 0:
-            continue
-        for m, md in monsters.items():
-            if md['health'] == 0:
-                continue
-
-            t_pos = td['position']
-            t_range = td['fire_range']
-            m_pos = md['position']
-
-            if m_pos is None:
-                break
-
-            if in_range(t_pos, m_pos, t_range):
-                pairs.append((t, m))
-                break
-
-    if 0 < len(pairs):
-        return pairs
-
 
 def fire_turrets(turrets, monsters):
-    done = False
-    while done is False:
-        pairs = turret_monster_pairs(turrets, monsters)
+    turret_with_ammo = len(turrets)
+    while turret_with_ammo > 0:
+        for monster, mdata in monsters.items():
+            monster_position = mdata['position']
+            if monster_position is None:  # Monster not yet on path
+                break
 
-        if pairs is not None:
-            for pair in pairs:
-                t, m = pair
-                turrets[t]['bullets'] -= 1
-                monsters[m]['health'] -= 1
-        else:
-            done = True
+            for turret, tdata in turrets.items():
+                if tdata['bullets'] == 0:
+                    turret_with_ammo -= 1
+                    continue
+
+                if monster_position in tdata['positions_in_range']:
+                    turrets[turret]['bullets'] -= 1
+                    monsters[monster]['health'] -= 1
 
 
 def reload_turrets(turrets):
     for turret, data in turrets.items():
         turrets[turret]['bullets'] = turrets[turret]['fire_rate']
-
-
-def update_row(battlefield, x, y, mod):
-    row = list(battlefield[x])
-    row[y] = str(mod)
-    return ''.join(row)
-
-
-def print_battlefield(battlefield, turrets, monsters):
-    battlefield = list(battlefield)
-    for t, td in turrets.items():
-        i, j = td['position']
-        battlefield[i] = update_row(battlefield, i, j, t)
-        for m, md in monsters.items():
-            m_pos = md['position']
-            if m_pos is None:
-                break
-            i, j = m_pos
-            health = md['health']
-            battlefield[i] = update_row(battlefield, i, j, health)
-    print('\n'.join(battlefield))
 
 
 def tower_defence(battlefield, turrets, wave):
@@ -191,15 +149,12 @@ def tower_defence(battlefield, turrets, wave):
     monster_data = create_monster_data(wave)
     t = 0
     remaining_health = 0
-    incomplete = True
-    while incomplete:
+    while len(monster_data) > 0:
         t += 1  # increment time
-        print_battlefield(battlefield, turret_data, monster_data)
-        move_monsters(monster_data, path)  # move
         start_monster(monster_data, path)
+        remaining_health += move_monsters(monster_data, path, t)  # move
         fire_turrets(turret_data, monster_data)  # fire
         print(f'Monsters: {monster_data}')
         reload_turrets(turret_data)  # reload
-        remaining_health += remove_monsters(monster_data,
-                                            path)
+        remove_monsters(monster_data, path)  # remove dead or finished monsters
     return remaining_health
