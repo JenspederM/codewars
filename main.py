@@ -1,4 +1,4 @@
-from tower_defence.tower_defence import tower_defence
+from TowerDefence import tower_defence
 
 if __name__ == '__main__':
     battlefield = [
