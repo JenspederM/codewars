@@ -1,10 +1,22 @@
-from PlantsAndZombies.drawer.drawer import Drawer
+from drawer.drawer import Drawer
 from game.game import Game
-from examples import example_tests
-from utilities import grab_example
+from examples import grab_example, examples
+
+files = [
+    './PlantsAndZombies/tower/bullet.py',
+    './PlantsAndZombies/tower/tower.py',
+    './PlantsAndZombies/zombie/zombie.py',
+    './PlantsAndZombies/game/game.py'
+]
+
+DEBUG = True
 
 if __name__ == '__main__':
-    board, zombies = grab_example(example_tests, 0)
-    game = Game(board, zombies)
-    drawer = Drawer(game)
-    drawer.mainloop()
+    for i in range(len(examples)):
+        board, zombies, solution = grab_example(i)
+        game = Game(board, zombies)
+        if DEBUG is True:
+            drawer = Drawer(game)
+            drawer.mainloop()
+        else:
+            print(f'Game finished on move {game.solution()}. It should finish on move {solution}')

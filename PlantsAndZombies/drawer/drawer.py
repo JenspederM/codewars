@@ -18,30 +18,31 @@ class Drawer:
         self.window = Tk()
         self.window.title('Plants Vs Zombies')
         self.header = Frame(self.window)
-        self.body = Frame(self.window)
+        self.game_board = Frame(self.window)
 
         self.__move_str = StringVar(self.header)
         self.__move_str.set(f'Game Started!')
         label = Label(self.header, textvariable=self.__move_str)
-
-        self.window.bind('<Button-1>', self.click)
-        self.canvas = Canvas(self.body, width=self.size_of_board[1], height=self.size_of_board[0],
+        label.pack(side=LEFT)
+        self.window.bind('<Button-1>', self.advance_game)
+        self.canvas = Canvas(self.game_board, width=self.size_of_board[1], height=self.size_of_board[0],
                              highlightthickness=1, highlightbackground="black")
 
         self.header.pack()
-        label.pack(side=LEFT)
-        self.body.pack()
+        self.game_board.pack()
         self.canvas.pack()
 
-        self.initialize_drawing()
-
+        self.game_started = False
         self.game_over = False
 
-    def click(self, event):
-        self.board.advance()
+        self.initialize_game()
 
+    def advance_game(self, event):
+        self.board.advance()
+        self.redraw_elements()
         self.__move_str.set(f'Move = {self.board.move}')
-        # Advance game
+
+    def redraw_elements(self):
         for zombie in self.board.zombies.values():
             if zombie.entry_move <= self.board.move and zombie.hp >= 0:
                 tower = self.board.towers.get((zombie.row, zombie.col))
@@ -58,7 +59,7 @@ class Drawer:
                 self.canvas.delete(zombie.tk_obj)
                 self.canvas.delete(zombie.tk_txt)
 
-    def initialize_drawing(self):
+    def initialize_game(self):
         rows = self.rows
         cols = self.cols
         row_h = self.row_height
@@ -82,7 +83,6 @@ class Drawer:
                 color = GREEN_COLOR
             else:
                 color = BLUE_COLOR
-
             self.place_element(tower, shape='rectangle', fill=color, outline='black', text=tower.name)
 
     def place_element(self, obj, shape, fill, outline, text):
@@ -96,13 +96,14 @@ class Drawer:
         y1 = y0 + row_h
 
         if shape == 'rectangle':
-            obj.tk_obj = self.canvas.create_rectangle(x0, y0, x1, y1, fill=fill, outline=outline)
-        elif shape == 'oval':
-            obj.tk_obj = self.canvas.create_oval(x0, y0, x1, y1, fill=fill, outline=outline)
+            tk_obj = self.canvas.create_rectangle(x0, y0, x1, y1, fill=fill, outline=outline)
+        else:
+            tk_obj = self.canvas.create_oval(x0, y0, x1, y1, fill=fill, outline=outline)
 
         obj.tk_txt = self.canvas.create_text((x0 + (col_w / 2), y0 + (row_h / 2)), text=text)
+        obj.tk_obj = tk_obj
+        return tk_obj
 
     def mainloop(self):
-        
-        while True:
+        while not self.board.game_over:
             self.window.update()
