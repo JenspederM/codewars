@@ -5,6 +5,7 @@ class Zombies:
     def __init__(self, start_col):
         self.zombies = []
         self.start_col = start_col
+        self.reached_end = False
 
     def __repr__(self):
         return f'Zombies(len={len(self.zombies)})'
@@ -23,7 +24,5 @@ class Zombies:
                 zombie.col -= 1
             else:
                 break
-                
             if zombie.col == 0:
-                return True
-        return False
+                self.reached_end = True

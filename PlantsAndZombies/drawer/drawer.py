@@ -5,10 +5,10 @@ from PlantsAndZombies.drawer.config import GREEN_COLOR, BLUE_COLOR, RED_COLOR
 
 
 class Drawer:
-    def __init__(self, board: Game, row_height: int = 100, col_width: int = 100, delay: int = 100):
-        self.board = board
-        self.rows = board.rows
-        self.cols = board.cols
+    def __init__(self, game: Game, row_height: int = 100, col_width: int = 100, delay: int = 100):
+        self.board = game
+        self.rows = game.rows
+        self.cols = game.cols
         self.row_height = row_height
         self.col_width = col_width
         self.delay = delay
@@ -21,7 +21,7 @@ class Drawer:
         self.body = Frame(self.window)
 
         self.__move_str = StringVar(self.header)
-        self.__move_str.set(f'Move = {board.move}')
+        self.__move_str.set(f'Game Started!')
         label = Label(self.header, textvariable=self.__move_str)
 
         self.window.bind('<Button-1>', self.click)
@@ -38,13 +38,13 @@ class Drawer:
         self.game_over = False
 
     def click(self, event):
-        self.game_over = self.board.advance()
+        self.board.advance()
 
         self.__move_str.set(f'Move = {self.board.move}')
         # Advance game
-        for zombie in self.board.zombies:
-            if zombie.entry_move <= self.board.move and zombie.hp > 0:
-                tower = self.board.towers.towers.get((zombie.row, zombie.col))
+        for zombie in self.board.zombies.values():
+            if zombie.entry_move <= self.board.move and zombie.hp >= 0:
+                tower = self.board.towers.get((zombie.row, zombie.col))
 
                 if tower is not None:
                     self.canvas.delete(tower.tk_obj)
@@ -75,25 +75,15 @@ class Drawer:
             self.canvas.create_line(val, 0, val, self.size_of_board[0])
 
         self.place_towers()
-        self.place_zombies()
 
     def place_towers(self):
-        for tower in self.board.towers:
+        for tower in self.board.towers.values():
             if tower.name == 'S':
                 color = GREEN_COLOR
             else:
                 color = BLUE_COLOR
 
             self.place_element(tower, shape='rectangle', fill=color, outline='black', text=tower.name)
-
-    def place_zombies(self):
-        for zombie in self.board.zombies:
-            if zombie.entry_move <= self.board.move:
-                if zombie.col is None:
-                    zombie.col = self.cols - 1
-                self.place_element(zombie, shape='oval', fill=RED_COLOR, outline='black', text=zombie.hp)
-            else:
-                break
 
     def place_element(self, obj, shape, fill, outline, text):
         row = obj.row
@@ -113,5 +103,6 @@ class Drawer:
         obj.tk_txt = self.canvas.create_text((x0 + (col_w / 2), y0 + (row_h / 2)), text=text)
 
     def mainloop(self):
-        while not self.game_over:
+        
+        while True:
             self.window.update()

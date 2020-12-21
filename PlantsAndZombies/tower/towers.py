@@ -18,16 +18,6 @@ class Towers:
 
         self.towers[(i, j)] = Tower(name, i, j)
 
-    def update_targets(self, zombies):
-        for tower in self:
-            for zombie in zombies:
-                zombie_pos = (zombie.row, zombie.col)
-                if zombie_pos[1] is None:
-                    break
-
-                if zombie_pos in tower.range:
-                    tower.targets.append(zombie)
-
     def fire_towers(self, zombies):
         for tower in self:
             for zombie in zombies:
