@@ -1,4 +1,4 @@
-from PyramidSlideDown import pyramid_test, longest_slide_down
+from Amidakuji.amidakuji import amidakuji, ladder
 
 if __name__ == '__main__':
-    print(longest_slide_down(pyramid_test))
+    amidakuji(ladder)

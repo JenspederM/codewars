@@ -8,6 +8,7 @@ ladder = [
     '101001',
     '010100'
 ]
+import numpy as np
 
 
 class color:
@@ -23,50 +24,52 @@ class color:
 
 
 def visualize(ladder):
-    print('\n'.join([''.join(row) for row in ladder]))
-
-
-def transform_ladder(ladder):
     rows = len(ladder)
     cols = len(ladder[0])
-    new_ladder = [[[] for _ in range(cols)] for _ in range(rows)]
-    for i in range(rows):
-        for j in range(cols):
-            cell = ladder[i][j]
-            if cell == '0':
-                new_ladder[i][j] = '|' + '0'
-            elif cell == '1':
-                new_ladder[i][j] = '|' + '1'
+    new_ladder = [[] for _ in range(rows + 1)]
+    for j in range(cols):
+        new_ladder[0].extend([str(j), " "])
+        if j == cols - 1:
+            new_ladder[0].extend([str(j + 1)])
 
-            if j == cols - 1:
-                new_ladder[i][j] += '|'
-    return new_ladder
+    for i in range(1, rows + 1):
+        for j in range(cols + 1):
+            if j == cols:
+                new_ladder[i].extend(['| '])
+            else:
+                cell = ladder[i - 1][j]
+                if cell == '0':
+                    new_ladder[i].extend(['|', ' '])
+                elif cell == '1':
+                    new_ladder[i].extend(['|', '_'])
+
+    print('\n'.join([''.join(row) for row in new_ladder]))
+    result = {}
+    for i in range(1, len(new_ladder + 1)):
+        for j in range(0, len(new_ladder[0]), 2):
+            print(new_ladder[0][j])
+            position = j // 2
+            if j > 0 and new_ladder[1][j - 1] == "_":
+                position -= 1
+            elif new_ladder[1][j + 1] == "_":
+                position += 1
+
+            result[j] = position
+            print(f'Position: {position}\n, Result {result}')
 
 
-def walk(ladder, start_position):
-    rows = len(ladder)
-    cols = len(ladder[0])
+def walk(array, start_position):
+    new_array = np.array([[np.int8(el) for el in row] for row in ladder])
+    cols = new_array.shape[1]
+
     i = 0
     j = start_position
-    direction = 'r'
-    while True:
-        cell = ladder[i][j]
-        if direction == 'r' and cell == '1':
-            j += 1
-        elif direction == 'l' and cell == '1':
-            j -= 1
-        if j + 1 == cols - 1:
-            direction = 'l'
-        if j - 1 == 0:
-            direction = 'r'
-        if i == rows - 1:
-            return j
-        else:
-            i += 1
+    for i in range(len(array)):
+        pass
 
 
 def amidakuji(ladder):
-    visualize(transform_ladder(ladder))
+    visualize(ladder)
     print([walk(ladder, i) for i in range(len(ladder[0]) - 1)])
 
 
