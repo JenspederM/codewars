@@ -125,7 +125,8 @@ if __name__ == '__main__':
         wave = test[2]
         td = TowerDefence(battlefield, turrets, wave)
         td.simulate_wave(debug=True)
-# for i in range(100): td.simulate_wave(debug=False)
-print(td.test_solution(solution))
 
-# write_solution(output_file='test.py', input_files=files)
+    # for i in range(100): td.simulate_wave(debug=False)
+    print(td.test_solution(solution))
+
+    # write_solution(output_file='test.py', input_files=files)

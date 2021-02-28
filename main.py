@@ -1,4 +1,4 @@
-from Amidakuji.amidakuji import amidakuji, ladder
+from BattleshipFieldValidator import validate_battlefield, battlefield_test
 
 if __name__ == '__main__':
-    amidakuji(ladder)
+    print(validate_battlefield(battlefield_test))
