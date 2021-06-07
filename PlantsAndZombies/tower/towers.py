@@ -1,4 +1,4 @@
-from PlantsAndZombies.tower.tower import Tower
+from tower.tower import Tower
 
 
 class Towers:

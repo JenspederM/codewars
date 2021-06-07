@@ -1,7 +1,7 @@
 from tkinter import *
 
-from PlantsAndZombies.game.game import Game
-from PlantsAndZombies.drawer.config import GREEN_COLOR, BLUE_COLOR, RED_COLOR
+from game.game import Game
+from drawer.config import GREEN_COLOR, BLUE_COLOR, RED_COLOR
 
 
 class Drawer:
@@ -13,7 +13,8 @@ class Drawer:
         self.col_width = col_width
         self.delay = delay
 
-        self.size_of_board = (self.rows * self.row_height, self.cols * self.col_width)
+        self.size_of_board = (self.rows * self.row_height,
+                              self.cols * self.col_width)
 
         self.window = Tk()
         self.window.title('Plants Vs Zombies')
@@ -54,7 +55,8 @@ class Drawer:
                 self.canvas.delete(zombie.tk_obj)
                 self.canvas.delete(zombie.tk_txt)
 
-                self.place_element(zombie, shape='oval', fill=RED_COLOR, outline='black', text=zombie.hp)
+                self.place_element(
+                    zombie, shape='oval', fill=RED_COLOR, outline='black', text=zombie.hp)
             else:
                 self.canvas.delete(zombie.tk_obj)
                 self.canvas.delete(zombie.tk_txt)
@@ -83,7 +85,8 @@ class Drawer:
                 color = GREEN_COLOR
             else:
                 color = BLUE_COLOR
-            self.place_element(tower, shape='rectangle', fill=color, outline='black', text=tower.name)
+            self.place_element(tower, shape='rectangle',
+                               fill=color, outline='black', text=tower.name)
 
     def place_element(self, obj, shape, fill, outline, text):
         row = obj.row
@@ -96,11 +99,14 @@ class Drawer:
         y1 = y0 + row_h
 
         if shape == 'rectangle':
-            tk_obj = self.canvas.create_rectangle(x0, y0, x1, y1, fill=fill, outline=outline)
+            tk_obj = self.canvas.create_rectangle(
+                x0, y0, x1, y1, fill=fill, outline=outline)
         else:
-            tk_obj = self.canvas.create_oval(x0, y0, x1, y1, fill=fill, outline=outline)
+            tk_obj = self.canvas.create_oval(
+                x0, y0, x1, y1, fill=fill, outline=outline)
 
-        obj.tk_txt = self.canvas.create_text((x0 + (col_w / 2), y0 + (row_h / 2)), text=text)
+        obj.tk_txt = self.canvas.create_text(
+            (x0 + (col_w / 2), y0 + (row_h / 2)), text=text)
         obj.tk_obj = tk_obj
         return tk_obj
 

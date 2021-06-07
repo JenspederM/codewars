@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import font as tkfont
 
-from PlantsAndZombies.drawer.GamePage import GamePage
-from PlantsAndZombies.drawer.StartPage import StartPage
-from PlantsAndZombies.drawer.SummaryPage import SummaryPage
+from drawer.GamePage import GamePage
+from drawer.StartPage import StartPage
+from drawer.SummaryPage import SummaryPage
 
 
 class MainView(tk.Tk):
@@ -11,7 +11,8 @@ class MainView(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.title_font = tkfont.Font(
+            family='Helvetica', size=18, weight="bold", slant="italic")
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible

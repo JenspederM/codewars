@@ -1,4 +1,4 @@
-from PlantsAndZombies.zombie.zombie import Zombie
+from zombie.zombie import Zombie
 
 
 class Zombies:

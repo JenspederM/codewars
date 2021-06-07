@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
-from PlantsAndZombies.tower.tower import Tower
-from PlantsAndZombies.zombie.zombie import Zombie
+from tower.tower import Tower
+from zombie.zombie import Zombie
 
 
 class Game:
@@ -43,7 +43,8 @@ class Game:
         self.input_zombies.sort(key=lambda x: x[0])
 
     def move_zombies(self):
-        zombies = OrderedDict({(i, j - 1): zombie for (i, j), zombie in self.zombies.items()})
+        zombies = OrderedDict(
+            {(i, j - 1): zombie for (i, j), zombie in self.zombies.items()})
         for (entry_move, row, hp) in self.input_zombies:
             if entry_move <= self.move:
                 col = (self.cols - 1) - (self.move - entry_move)

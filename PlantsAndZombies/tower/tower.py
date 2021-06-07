@@ -1,4 +1,4 @@
-from PlantsAndZombies.tower.bullet import Bullet
+from tower.bullet import Bullet
 
 
 class Tower:
@@ -28,4 +28,3 @@ class Tower:
 
     def fire(self, zombie):
         zombie.hp -= 1
-        

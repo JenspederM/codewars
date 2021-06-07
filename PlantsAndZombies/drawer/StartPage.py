@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from PlantsAndZombies.examples import grab_example
-from PlantsAndZombies.game.game import Game
+from examples import grab_example
+from game.game import Game
 
 
 class StartPage(tk.Frame):
@@ -21,7 +21,8 @@ class StartPage(tk.Frame):
         self.parent.grid_columnconfigure(0, weight=1)
         self.parent.config(background="lavender")
 
-        label = tk.Label(self, text="Start Page", font=self.controller.title_font)
+        label = tk.Label(self, text="Start Page",
+                         font=self.controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
         self.tree = ttk.Treeview(self)
@@ -30,7 +31,8 @@ class StartPage(tk.Frame):
             self.add_example(i)
         self.tree.bind('<ButtonRelease-1>', self.select_item)
 
-        button1 = tk.Button(self, text="Start Game", command=lambda: self.controller.show_frame("GamePage"))
+        button1 = tk.Button(self, text="Start Game",
+                            command=lambda: self.controller.show_frame("GamePage"))
         button1.pack(side='bottom')
 
     def select_item(self, event):
