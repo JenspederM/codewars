@@ -67,7 +67,8 @@ def lg(i):
 
 
 ds = [
-    'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eight', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth',
+    'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eight',
+    'Ninth', 'Tenth', 'Eleventh', 'Twelfth',
 ]
 
 ls = ["Twelve drummers drumming,",
@@ -111,6 +112,6 @@ class EventParser:
         parser = self._parser[event['telegram_name']]
         return parser(event)
 
-    @staticmethod -
+    @staticmethod
     def _parse_telegram1(event):
         return event

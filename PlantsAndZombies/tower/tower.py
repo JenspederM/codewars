@@ -28,3 +28,4 @@ class Tower:
 
     def fire(self, zombie):
         zombie.hp -= 1
+        
