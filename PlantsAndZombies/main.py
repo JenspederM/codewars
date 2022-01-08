@@ -2,6 +2,7 @@ from drawer.drawer import Drawer
 from game.game import Game
 from examples import grab_example, examples
 
+
 files = [
     './PlantsAndZombies/tower/bullet.py',
     './PlantsAndZombies/tower/tower.py',
@@ -19,4 +20,5 @@ if __name__ == '__main__':
             drawer = Drawer(game)
             drawer.mainloop()
         else:
-            print(f'Game finished on move {game.solution()}. It should finish on move {solution}')
+            print(
+                f'Game finished on move {game.solution()}. It should finish on move {solution}')

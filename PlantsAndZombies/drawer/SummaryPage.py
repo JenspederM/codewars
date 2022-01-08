@@ -7,5 +7,6 @@ class SummaryPage(tk.Frame):
         label = tk.Label(self, text="Summary Page", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
-        button1 = tk.Button(self, text="Restart Game", command=lambda: controller.show_frame("StartPage"))
+        button1 = tk.Button(self, text="Restart Game",
+                            command=lambda: controller.show_frame("StartPage"))
         button1.pack(side='bottom')
