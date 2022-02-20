@@ -32,14 +32,32 @@ class User:
         - If a user ranked -8 completes an activity ranked -4 they will receive 160 progress, resulting in the user being upgraded to rank -7 and having earned 60 progress towards their next rank
         - If a user ranked -1 completes an activity ranked 1 they will receive 10 progress (remember, zero rank is ignored)
     """
-    available_ranks = [i for i in range(-8, 8) if i != 0]
+
+    _available_ranks = [i for i in range(-8, 9) if i != 0]
+    _rank_max = max(_available_ranks)
+    _rank_len = len(_available_ranks) - 1
+
 
     def __init__(self, verbose=False) -> None:
+        self.xp = 0
         self.verbose = verbose
-        self.rank = -8
-        self.progress = 0
         self.debug_print(None, None)
 
+    @property
+    def progress(self):
+        if self.rank == self._rank_max:
+            return 0
+
+        return self.xp % 100
+    
+    @property
+    def rank(self):
+        new_rank = self._available_ranks[min(self.xp // 100, self._rank_len)]
+        if new_rank < self._rank_max:
+            return new_rank
+        else:
+            return self._rank_max
+    
     def __repr__(self):
         return f"User(rank={self.rank}, progress={self.progress})"
     
@@ -71,20 +89,6 @@ class User:
     
     def inc_progress(self, activity_rank: int = 0):
         self.assert_input(activity_rank=activity_rank)
-
         increment = self.get_increment(activity_rank)
-
-        self.progress += increment
-
-        if self.progress >= 100:
-            self.rank += self.progress // 100
-            
-            if self.rank > 8:
-                self.rank = 8
-                self.progress = 0
-            else:
-                self.progress = self.progress % 100
-            
-            if self.rank == 0:
-                self.rank += 1
+        self.xp += increment
             
