@@ -55,7 +55,7 @@ class User:
     def get_increment(self, activity_rank: int) -> int:
         delta = abs(self.rank - activity_rank)
 
-        if self.rank < 0 and activity_rank > 0 or self.rank > 0 and activity_rank < 0:
+        if (0 > self.rank and 0 < activity_rank) or (0 < self.rank and 0 > activity_rank):
             delta -= 1
 
         if activity_rank <= self.rank:
