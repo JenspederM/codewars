@@ -10,6 +10,7 @@ def test_user():
             - If a user ranked -1 completes an activity ranked 1 they will receive 10 progress (remember, zero rank is ignored)
     """    
     user = User()
+    print(user)
     user.inc_progress(-7)
     print(user)
     user.inc_progress(-5)
