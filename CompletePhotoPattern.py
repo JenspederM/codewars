@@ -53,19 +53,38 @@ Note:
 from typing import List
 
 
+class Hand:
+    def __init__(self, side: str, position: int):
+        self.side = side
+        self.pos = position
+
+    def __eq__(self, other):
+        return self.side == other.side and self.pos == other.pos
+
+    def __str__(self):
+        return self.side
+
+
 class Person:
     def __init__(self, legs: int):
         self.body = self.create_body(legs)
         self.legs = [legs]
+        self.hands = [Hand("left", self.height - 5), Hand("right", self.height - 5)]
         self.has_arms = False
+        self.hand_pos = self.height - 5
+        self.inner_ws = ""
+
+    @property
+    def has_right_hand(self):
+        return any(part.endswith("\_") for part in self.body)
+
+    @property
+    def has_left_hand(self):
+        return any(part.startswith("_/") for part in self.body)
 
     @property
     def height(self):
         return len(self.body)
-
-    @property
-    def arm_start(self):
-        return self.height - 5
 
     def __str__(self) -> str:
         self.add_ws_side()
@@ -79,8 +98,9 @@ class Person:
             self.body.insert(0, " " * len(self.body[0]))
 
     def add_ws_side(self):
-        max_len = max(len(p) for p in self.body)
-        min_len = min(len(p) for p in self.body)
+        lengts = [len(part) for part in self.body]
+        max_len = max(lengts)
+        min_len = min(lengts)
         delta = (max_len - min_len) / 2
         ws = " " * int(delta)
         self.body = [ws + p + ws if len(p) != max_len else p for p in self.body]
@@ -100,15 +120,17 @@ class Person:
         return len(self.body)
 
     def add_arms(self, other=None):
+        hand_pos = min(self.hand_pos, other.hand_pos)
+        ws = ""
+
         if not self.has_arms:
-            self.body[-self.arm_start] = "_/" + self.body[-self.arm_start] + "\\_"
+            self.body[-hand_pos] = "_/" + ws + self.body[-hand_pos] + ws + "\\_"
             self.add_ws_side()
             self.has_arms = True
         return self
 
     def merge(self, other):
         # Add arms
-
         self.add_arms(other)
         other.add_arms(self)
 
