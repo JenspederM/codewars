@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "best-travel"
+version = "0.1.0"
+description = ""
+authors = ["Jens Peder Meldgaard <jenspederm@gmail.com>"]
+readme = "README.md"
+packages = [{include = "best_travel"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
