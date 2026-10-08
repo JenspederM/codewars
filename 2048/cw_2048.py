@@ -2,7 +2,8 @@ from copy import deepcopy
 
 # from preloaded import DOWN, LEFT, RIGHT, UP
 # from preloaded import TFE   # TFE.UP, TFE.LEFT, ...
-#
+
+
 DOWN = "DOWN"
 LEFT = "LEFT"
 RIGHT = "RIGHT"
@@ -100,10 +101,6 @@ sample_test_cases = [
 
 
 def main():
-    # print(sum_list([0, 0, 2, 0]))
-    # print(sum_list([4, 4, 8, 0]))
-    # return
-
     for name, board, test_cases in sample_test_cases:
         print(f"=== Testing {name}")
 
